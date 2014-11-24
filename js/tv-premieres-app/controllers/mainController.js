@@ -5,6 +5,9 @@ app.controller("mainController", function($scope, $http) {
     $scope.filterText = null;
     $scope.availableGenres = [];
     $scope.genreFilter = null;
+    $scope.setGenreFilter = function(genre){
+      $scope.genreFilter = genre;
+    }
     $scope.init = function() {
         //API requires a start date
         var today = new Date();
@@ -23,15 +26,15 @@ app.controller("mainController", function($scope, $http) {
                     $scope.results.push(tvshow);
                     //Loop through each genre for this episode
                     angular.forEach(tvshow.show.genres, function(genre, index) {
-                      //Only add to the availableGenres array if it doesn't already exist
-                      var exists = false;
-                      angular.forEach($scope.availableGenres, function(avGenre, index) {
-                        if (avGenre == genre) {
-                          exists = true;
-                        }
-                      });
+                        //Only add to the availableGenres array if it doesn't already exist
+                        var exists = false;
+                        angular.forEach($scope.availableGenres, function(avGenre, index) {
+                            if (avGenre == genre) {
+                                exists = true;
+                            }
+                        });
                         if (exists === false) {
-                          $scope.availableGenres.push(genre);
+                            $scope.availableGenres.push(genre);
                         }
                     });
                 });
@@ -39,5 +42,23 @@ app.controller("mainController", function($scope, $http) {
         }).error(function(error) {
 
         });
+    };
+});
+
+app.filter('isGenre', function() {
+    return function(input, genre) {
+        if (typeof genre == 'undefined' || genre == null) {
+            return input;
+        } else {
+            var out = [];
+            for (var a = 0; a < input.length; a++) {
+                for (var b = 0; b < input[a].show.genres.length; b++) {
+                    if (input[a].show.genres[b] == genre) {
+                        out.push(input[a]);
+                    }
+                }
+            }
+            return out;
+        }
     };
 });
