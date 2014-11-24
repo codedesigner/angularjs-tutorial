@@ -3,6 +3,8 @@ app.controller("mainController", function($scope, $http) {
     $scope.apiKey = "179cbf89f9a0acd689f3140a56e40cfb";
     $scope.results = [];
     $scope.filterText = null;
+    $scope.availableGenres = [];
+    $scope.genreFilter = null;
     $scope.init = function() {
         //API requires a start date
         var today = new Date();
@@ -19,6 +21,19 @@ app.controller("mainController", function($scope, $http) {
                     //Create a date string from the timestamp so we can filter on it based on user text input
                     tvshow.date = date; //Attach the full date to each episode
                     $scope.results.push(tvshow);
+                    //Loop through each genre for this episode
+                    angular.forEach(tvshow.show.genres, function(genre, index) {
+                      //Only add to the availableGenres array if it doesn't already exist
+                      var exists = false;
+                      angular.forEach($scope.availableGenres, function(avGenre, index) {
+                        if (avGenre == genre) {
+                          exists = true;
+                        }
+                      });
+                        if (exists === false) {
+                          $scope.availableGenres.push(genre);
+                        }
+                    });
                 });
             });
         }).error(function(error) {
