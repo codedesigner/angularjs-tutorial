@@ -8,6 +8,19 @@ app.controller("mainController", function($scope, $http) {
     $scope.setGenreFilter = function(genre){
       $scope.genreFilter = genre;
     }
+    $scope.customOrder = function(tvshow) {
+      switch ($scope.orderField) {
+        case "Air Date":
+          return tvshow.episode.first_aired;
+        case "Rating":
+          return tvshow.episode.ratings.percenage;
+          break;
+      }
+    };
+    $scope.orderFields = ["Air Date", "Rating"];
+    $scope.orderDirections = ["Descending", "Ascending"];
+    $scope.orderField = "Air Date"; //Dfault order field
+    $scope.orderReverse = false;
     $scope.init = function() {
         //API requires a start date
         var today = new Date();
